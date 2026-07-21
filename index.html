@@ -1,0 +1,933 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Smart College Bus Management System - Prototype</title>
+  <!-- Google Fonts & Remix Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/3.5.0/remixicon.min.css">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <!-- Top Application Header & Role Switcher -->
+  <header class="app-header">
+    <div class="brand-container">
+      <div class="brand-logo">
+        <i class="ri-bus-fill"></i>
+      </div>
+      <div class="brand-info">
+        <h1>Smart College Bus Management System</h1>
+        <span>Route Optimization & Commute Intelligence</span>
+      </div>
+    </div>
+
+    <!-- Role Switcher Tabs -->
+    <div class="role-switch-container">
+      <button class="role-btn active" data-role="student">
+        <i class="ri-user-line"></i> Student View
+      </button>
+      <button class="role-btn" data-role="driver">
+        <i class="ri-steering-fill"></i> Driver View
+      </button>
+      <button class="role-btn" data-role="admin">
+        <i class="ri-admin-fill"></i> Admin Portal
+      </button>
+    </div>
+  </header>
+
+  <!-- Live System Logic Notification Banner -->
+  <div class="logic-banner">
+    <div class="logic-status">
+      <div class="pulse-dot"></div>
+      <span>Automated Route Engine Active &bull; Daily Cutoff: <strong>07:00 AM</strong></span>
+    </div>
+    <div style="font-size:0.78rem; opacity:0.85;">
+      Optimization Status: <strong>Stops with 0 passengers automatically removed</strong>
+    </div>
+  </div>
+
+  <!-- App Main Container -->
+  <div class="app-container">
+    
+    <!-- Sidebar Navigation -->
+    <aside class="app-sidebar">
+      
+      <!-- Student Nav Group -->
+      <div class="sidebar-role-group" data-role="student" style="display:flex; flex-direction:column; gap:0.35rem; width:100%;">
+        <span class="nav-group-label">Student Menu</span>
+        <a class="nav-item active" data-view="student-dashboard"><i class="ri-dashboard-line"></i> Dashboard</a>
+        <a class="nav-item" data-view="student-travel"><i class="ri-checkbox-circle-line"></i> Today's Travel</a>
+        <a class="nav-item" data-view="student-bus"><i class="ri-bus-2-line"></i> Bus Details & Map</a>
+        <a class="nav-item" data-view="student-notifications"><i class="ri-notification-3-line"></i> Notifications <span class="badge badge-warning" style="margin-left:auto;">2</span></a>
+        <a class="nav-item" data-view="student-profile"><i class="ri-user-3-line"></i> Profile & Settings</a>
+      </div>
+
+      <!-- Driver Nav Group -->
+      <div class="sidebar-role-group" data-role="driver" style="display:none; flex-direction:column; gap:0.35rem; width:100%;">
+        <span class="nav-group-label">Driver Console</span>
+        <a class="nav-item active" data-view="driver-dashboard"><i class="ri-dashboard-3-line"></i> Driver Dashboard</a>
+        <a class="nav-item" data-view="driver-route"><i class="ri-map-pin-2-line"></i> Today's Route</a>
+        <a class="nav-item" data-view="driver-map"><i class="ri-map-2-line"></i> Live Route Map</a>
+        <a class="nav-item" data-view="driver-roster"><i class="ri-team-line"></i> Student Roster</a>
+        <a class="nav-item" data-view="driver-summary"><i class="ri-bar-chart-2-line"></i> Route KPI Summary</a>
+        <a class="nav-item" data-view="driver-issue" onclick="openModal('modal-report-issue')"><i class="ri-error-warning-line"></i> Report Issue</a>
+        <a class="nav-item" data-view="driver-profile"><i class="ri-user-settings-line"></i> Driver Profile</a>
+      </div>
+
+      <!-- Admin Nav Group -->
+      <div class="sidebar-role-group" data-role="admin" style="display:none; flex-direction:column; gap:0.35rem; width:100%;">
+        <span class="nav-group-label">Admin Controls</span>
+        <a class="nav-item active" data-view="admin-dashboard"><i class="ri-dashboard-fill"></i> Master Dashboard</a>
+        <a class="nav-item" data-view="admin-students"><i class="ri-user-group-line"></i> Student Management</a>
+        <a class="nav-item" data-view="admin-drivers"><i class="ri-user-shared-line"></i> Driver Management</a>
+        <a class="nav-item" data-view="admin-buses"><i class="ri-bus-line"></i> Bus Management</a>
+        <a class="nav-item" data-view="admin-routes"><i class="ri-route-line"></i> Route Management</a>
+        <a class="nav-item" data-view="admin-stops"><i class="ri-map-pin-user-line"></i> Bus Stop Management</a>
+        <a class="nav-item" data-view="admin-monitoring"><i class="ri-pulse-line"></i> Daily Live Monitoring</a>
+        <a class="nav-item" data-view="admin-reports"><i class="ri-pie-chart-line"></i> Reports & Fuel Analytics</a>
+        <a class="nav-item" data-view="admin-notifications"><i class="ri-broadcast-line"></i> Notification Center</a>
+        <a class="nav-item" data-view="admin-settings"><i class="ri-settings-4-line"></i> System Settings</a>
+      </div>
+
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="main-content">
+
+      <!-- ========================================================= -->
+      <!-- STUDENT MODULE VIEWS -->
+      <!-- ========================================================= -->
+      
+      <!-- Student Dashboard -->
+      <section class="view-section active" id="student-dashboard">
+        <div class="card" style="background: linear-gradient(135deg, #2563eb, #1d4ed8); color:white;">
+          <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1rem;">
+            <div>
+              <span class="badge" style="background:rgba(255,255,255,0.2); color:white; margin-bottom:0.5rem;">STUDENT PORTAL</span>
+              <h2 style="font-size:1.6rem; font-weight:800;">Welcome back, Rahul Sharma!</h2>
+              <p style="opacity:0.9; font-size:0.9rem; margin-top:0.25rem;">Student ID: <strong>22CS045</strong> &bull; Dept: Computer Science &bull; 3rd Year</p>
+            </div>
+            <div style="text-align:right;">
+              <span style="font-size:0.8rem; opacity:0.85;">Assigned Bus</span>
+              <h3 style="font-size:1.4rem; font-weight:700;">Bus 07</h3>
+            </div>
+          </div>
+        </div>
+
+        <div class="poll-card">
+          <div class="poll-header">
+            <div>
+              <h3 style="font-size:1.2rem; font-weight:700;">Will you use the college bus today?</h3>
+              <p style="font-size:0.85rem; color:#94a3b8; margin-top:0.25rem;">Confirming your ride removes empty stops and saves fuel!</p>
+            </div>
+            <div class="poll-deadline-tag">
+              <i class="ri-time-line"></i> Cutoff: 07:00 AM
+            </div>
+          </div>
+
+          <div class="poll-options">
+            <button class="poll-btn selected-yes" id="poll-yes">
+              <i class="ri-checkbox-circle-fill"></i> YES, I'm Coming
+            </button>
+            <button class="poll-btn" id="poll-no">
+              <i class="ri-close-circle-line"></i> NO, Skip My Stop
+            </button>
+          </div>
+
+          <div class="trip-form" id="trip-config-form">
+            <div class="grid-2">
+              <div class="form-group">
+                <label style="color:#cbd5e1;"><i class="ri-map-pin-user-line"></i> Pickup Stop</label>
+                <select class="form-control" style="background:rgba(15,23,42,0.6); color:white; border-color:rgba(255,255,255,0.2);">
+                  <option selected>Kukatpally Metro (Assigned Default)</option>
+                  <option>Miyapur Cross Road</option>
+                  <option>JNTU Junction</option>
+                  <option>KPHB Colony</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label style="color:#cbd5e1;"><i class="ri-time-line"></i> Select Trip</label>
+                <select class="form-control" style="background:rgba(15,23,42,0.6); color:white; border-color:rgba(255,255,255,0.2);">
+                  <option selected>Both (Morning Pick & Evening Drop)</option>
+                  <option>Morning Only</option>
+                  <option>Evening Only</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div id="student-confirmation-banner"></div>
+
+        <div class="grid-3">
+          <div class="card">
+            <div class="card-header">
+              <span class="card-title"><i class="ri-steering-line" style="color:var(--primary);"></i> Driver Contact</span>
+            </div>
+            <h4 style="font-size:1.05rem; font-weight:700;">Ramesh Kumar</h4>
+            <p style="font-size:0.85rem; color:var(--text-muted); margin-top:0.2rem;">Bus 07 &bull; Phone: +91 98765 43210</p>
+            <button class="btn btn-sm btn-secondary" style="margin-top:1rem; width:100%;"><i class="ri-phone-line"></i> Call Driver</button>
+          </div>
+
+          <div class="card">
+            <div class="card-header">
+              <span class="card-title"><i class="ri-time-line" style="color:var(--primary);"></i> Scheduled Arrival</span>
+            </div>
+            <h4 style="font-size:1.05rem; font-weight:700;">07:35 AM</h4>
+            <p style="font-size:0.85rem; color:var(--text-muted); margin-top:0.2rem;">Kukatpally Metro Stop</p>
+            <span class="badge badge-success" style="margin-top:1rem;">On Schedule</span>
+          </div>
+
+          <div class="card">
+            <div class="card-header">
+              <span class="card-title"><i class="ri-shield-check-line" style="color:var(--primary);"></i> Route Status</span>
+            </div>
+            <h4 style="font-size:1.05rem; font-weight:700;">Optimized (7/8 Stops)</h4>
+            <p style="font-size:0.85rem; color:var(--text-muted); margin-top:0.2rem;">1 Stop Auto-Skipped Today</p>
+            <span class="badge badge-info" style="margin-top:1rem;">1.8 L Fuel Saved</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- Student Today's Travel -->
+      <section class="view-section" id="student-travel">
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title"><i class="ri-checkbox-circle-line" style="color:var(--primary);"></i> Travel Status Preference</h3>
+          </div>
+          <p style="color:var(--text-muted); font-size:0.9rem; margin-bottom:1.5rem;">Updates submitted before 07:00 AM cutoff automatically reshape the driver's morning route.</p>
+          
+          <div class="grid-2">
+            <div style="background:var(--surface-alt); padding:1.25rem; border-radius:var(--radius-md); border:1px solid var(--border);">
+              <h4 style="font-weight:700; margin-bottom:0.75rem;">Current Travel Status</h4>
+              <div style="display:flex; align-items:center; gap:0.75rem;">
+                <span class="badge badge-success" id="student-status-badge">Confirmed</span>
+                <span style="font-size:0.85rem; color:var(--text-muted);">Submitted at 06:42 AM</span>
+              </div>
+            </div>
+            <div style="background:var(--surface-alt); padding:1.25rem; border-radius:var(--radius-md); border:1px solid var(--border);">
+              <h4 style="font-weight:700; margin-bottom:0.75rem;">Deadline Status</h4>
+              <span class="badge badge-warning" id="deadline-sim-status">OPEN (Deadline 07:00 AM)</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Student Bus Details -->
+      <section class="view-section" id="student-bus">
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title"><i class="ri-map-pin-2-line" style="color:var(--primary);"></i> Bus 07 Live Route Tracking</h3>
+            <span class="badge badge-success">En Route &bull; Live GPS</span>
+          </div>
+          <div class="map-canvas-container">
+            <svg class="map-svg map-svg-element" viewBox="0 0 1000 340"></svg>
+          </div>
+        </div>
+      </section>
+
+      <!-- Student Notifications -->
+      <section class="view-section" id="student-notifications">
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title"><i class="ri-notification-3-line" style="color:var(--primary);"></i> Notifications & Alerts</h3>
+          </div>
+          <div style="display:flex; flex-direction:column; gap:1rem;">
+            <div style="padding:1rem; background:var(--primary-light); border-left:4px solid var(--primary); border-radius:var(--radius-md);">
+              <h4 style="font-weight:700; color:var(--primary);">Daily Travel Confirmation Reminder</h4>
+              <p style="font-size:0.85rem; color:var(--text-muted); margin-top:0.25rem;">Confirm your ride before 07:00 AM cutoff.</p>
+              <span style="font-size:0.75rem; color:var(--text-muted);">06:30 AM Today</span>
+            </div>
+            <div style="padding:1rem; background:var(--warning-light); border-left:4px solid var(--warning); border-radius:var(--radius-md);">
+              <h4 style="font-weight:700; color:var(--warning);">Route Optimization Alert</h4>
+              <p style="font-size:0.85rem; color:var(--text-muted); margin-top:0.25rem;">Stop "Moosapet" auto-skipped today (0 passengers).</p>
+              <span style="font-size:0.75rem; color:var(--text-muted);">07:01 AM Today</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Student Profile -->
+      <section class="view-section" id="student-profile">
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title"><i class="ri-user-3-line" style="color:var(--primary);"></i> Student Profile</h3>
+          </div>
+          <div style="display:flex; gap:1.5rem; flex-wrap:wrap; align-items:center;">
+            <div style="width:80px; height:80px; border-radius:50%; background:var(--primary); color:white; display:flex; align-items:center; justify-content:center; font-size:2.2rem; font-weight:800;">
+              RS
+            </div>
+            <div>
+              <h3 style="font-size:1.25rem; font-weight:800;">Rahul Sharma</h3>
+              <p style="color:var(--text-muted); font-size:0.9rem;">Roll No: <strong>22CS045</strong> &bull; Dept: Computer Science</p>
+              <p style="color:var(--text-muted); font-size:0.9rem;">Assigned Bus: <strong>Bus 07</strong> | Stop: <strong>Kukatpally Metro</strong></p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ========================================================= -->
+      <!-- DRIVER MODULE VIEWS -->
+      <!-- ========================================================= -->
+      
+      <!-- Driver Dashboard -->
+      <section class="view-section" id="driver-dashboard">
+        <div class="card" style="background: linear-gradient(135deg, #0f172a, #1e293b); color:white;">
+          <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1rem;">
+            <div>
+              <span class="badge" style="background:rgba(255,255,255,0.15); color:white; margin-bottom:0.5rem;">DRIVER CONSOLE</span>
+              <h2 style="font-size:1.6rem; font-weight:800;">Driver Ramesh Kumar</h2>
+              <p style="opacity:0.85; font-size:0.9rem; margin-top:0.25rem;">Assigned Bus: <strong>Bus 07</strong> &bull; Reg: <strong>TS 09 UB 4412</strong> &bull; Date: <strong>21 July 2026</strong></p>
+            </div>
+            <div>
+              <span class="badge badge-success">ROUTE ACTIVE</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="grid-4">
+          <div class="stat-card info">
+            <div class="stat-header"><span>Stops to Visit</span><div class="stat-icon"><i class="ri-map-pin-line"></i></div></div>
+            <div class="stat-value">7 / 8</div>
+            <div class="stat-footer">Master Sequence</div>
+          </div>
+          <div class="stat-card success">
+            <div class="stat-header"><span>Visited Stops</span><div class="stat-icon"><i class="ri-checkbox-circle-line"></i></div></div>
+            <div class="stat-value" id="driver-visited-count">2</div>
+            <div class="stat-footer">On Time</div>
+          </div>
+          <div class="stat-card danger">
+            <div class="stat-header"><span>Auto-Skipped</span><div class="stat-icon"><i class="ri-close-circle-line"></i></div></div>
+            <div class="stat-value" id="driver-skipped-count">1</div>
+            <div class="stat-footer">0 Passengers</div>
+          </div>
+          <div class="stat-card success">
+            <div class="stat-header"><span>Fuel Saved Today</span><div class="stat-icon"><i class="ri-gas-station-line"></i></div></div>
+            <div class="stat-value" id="driver-fuel-saved">1.8 L</div>
+            <div class="stat-footer">14 Mins Saved</div>
+          </div>
+        </div>
+
+        <!-- Driver Quick Actions -->
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title"><i class="ri-flashlight-line" style="color:var(--primary);"></i> Driver Quick Actions</h3>
+          </div>
+          <div class="quick-actions-grid">
+            <div class="quick-action-card" onclick="switchView('driver-route')">
+              <div class="quick-action-icon"><i class="ri-map-pin-2-line"></i></div>
+              <span class="quick-action-label">Today's Route</span>
+            </div>
+            <div class="quick-action-card" onclick="switchView('driver-map')">
+              <div class="quick-action-icon"><i class="ri-navigation-line"></i></div>
+              <span class="quick-action-label">Live Map</span>
+            </div>
+            <div class="quick-action-card" onclick="switchView('driver-roster')">
+              <div class="quick-action-icon"><i class="ri-team-line"></i></div>
+              <span class="quick-action-label">Student List</span>
+            </div>
+            <div class="quick-action-card" onclick="switchView('driver-summary')">
+              <div class="quick-action-icon"><i class="ri-bar-chart-2-line"></i></div>
+              <span class="quick-action-label">Route Summary</span>
+            </div>
+            <div class="quick-action-card" onclick="openModal('modal-report-issue')">
+              <div class="quick-action-icon" style="background:var(--danger-light); color:var(--danger);"><i class="ri-error-warning-line"></i></div>
+              <span class="quick-action-label" style="color:var(--danger);">Report Issue</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title"><i class="ri-route-line" style="color:var(--primary);"></i> Optimized Stop Sequence Timeline</h3>
+          </div>
+          <div class="route-timeline" id="driver-route-timeline"></div>
+        </div>
+      </section>
+
+      <!-- Driver Route Detailed View -->
+      <section class="view-section" id="driver-route">
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title"><i class="ri-map-pin-2-line" style="color:var(--primary);"></i> Today's Optimized Route Details</h3>
+          </div>
+          <p style="color:var(--text-muted); font-size:0.9rem;">Stops with 0 boarding students are automatically removed from navigation sequence.</p>
+        </div>
+      </section>
+
+      <!-- Driver Live Map -->
+      <section class="view-section" id="driver-map">
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title"><i class="ri-navigation-line" style="color:var(--primary);"></i> Navigation Console</h3>
+            <button class="btn btn-sm btn-primary"><i class="ri-compass-3-line"></i> Start Turn-by-Turn GPS</button>
+          </div>
+          <div class="map-canvas-container">
+            <svg class="map-svg map-svg-element" viewBox="0 0 1000 340"></svg>
+          </div>
+        </div>
+      </section>
+
+      <!-- Driver Student Roster -->
+      <section class="view-section" id="driver-roster">
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title"><i class="ri-team-line" style="color:var(--primary);"></i> Boarding Student Manifest</h3>
+          </div>
+          <div class="toolbar-container">
+            <div class="search-box">
+              <i class="ri-search-line"></i>
+              <input type="text" class="form-control" placeholder="Search student name or roll number...">
+            </div>
+            <div class="filter-actions">
+              <select class="form-control" style="width:auto;">
+                <option>Filter by Stop: All</option>
+                <option>Kukatpally Metro</option>
+                <option>JNTU Junction</option>
+                <option>KPHB Colony</option>
+              </select>
+            </div>
+          </div>
+          <div class="data-table-container">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Student Name</th>
+                  <th>Roll No</th>
+                  <th>Pickup Stop</th>
+                  <th>Boarding Status</th>
+                  <th>Special Notes</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>Rahul Sharma</strong></td>
+                  <td>22CS045</td>
+                  <td>Kukatpally Metro</td>
+                  <td><span class="badge badge-success">Boarded</span></td>
+                  <td>Project poster carrier</td>
+                </tr>
+                <tr>
+                  <td><strong>Ananya Rao</strong></td>
+                  <td>22EC012</td>
+                  <td>Kukatpally Metro</td>
+                  <td><span class="badge badge-success">Boarded</span></td>
+                  <td>-</td>
+                </tr>
+                <tr>
+                  <td><strong>Priya Patel</strong></td>
+                  <td>22CS102</td>
+                  <td>JNTU Junction</td>
+                  <td><span class="badge badge-success">Boarded</span></td>
+                  <td>-</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- Driver Summary -->
+      <section class="view-section" id="driver-summary">
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title"><i class="ri-bar-chart-2-line" style="color:var(--primary);"></i> Route Performance Summary</h3>
+          </div>
+          <div class="grid-4">
+            <div class="stat-card success">
+              <div class="stat-header"><span>Visited Stops</span></div>
+              <div class="stat-value">7 / 8</div>
+            </div>
+            <div class="stat-card info">
+              <div class="stat-header"><span>Students Picked Up</span></div>
+              <div class="stat-value" id="driver-summary-picked">28</div>
+            </div>
+            <div class="stat-card warning">
+              <div class="stat-header"><span>Distance Covered</span></div>
+              <div class="stat-value">18.4 km</div>
+            </div>
+            <div class="stat-card success">
+              <div class="stat-header"><span>Fuel Saved</span></div>
+              <div class="stat-value">1.8 L</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Driver Profile -->
+      <section class="view-section" id="driver-profile">
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title"><i class="ri-user-settings-line" style="color:var(--primary);"></i> Driver Profile</h3>
+          </div>
+          <p>Driver Name: <strong>Ramesh Kumar</strong> &bull; Employee ID: <strong>DRV-1007</strong> &bull; Experience: <strong>6 Years</strong> &bull; Bus: <strong>Bus 07</strong></p>
+        </div>
+      </section>
+
+      <!-- ========================================================= -->
+      <!-- ADMIN MODULE VIEWS -->
+      <!-- ========================================================= -->
+      
+      <!-- Admin Master Dashboard -->
+      <section class="view-section" id="admin-dashboard">
+        <div class="card" style="background: linear-gradient(135deg, #1e293b, #0f172a); color:white;">
+          <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1rem;">
+            <div>
+              <span class="badge" style="background:rgba(255,255,255,0.15); color:white; margin-bottom:0.5rem;">ADMINISTRATION PORTAL</span>
+              <h2 style="font-size:1.6rem; font-weight:800;">Transport Operations Control Center</h2>
+              <p style="opacity:0.85; font-size:0.9rem; margin-top:0.25rem;">Real-time Fleet Intelligence & Route Efficiency Metrics</p>
+            </div>
+            <div>
+              <button class="btn btn-sm btn-primary" onclick="triggerEdgeCase('toggle-deadline')"><i class="ri-timer-line"></i> Toggle Cutoff Deadline</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 7 Stat Cards as requested -->
+        <div class="grid-4">
+          <div class="stat-card primary">
+            <div class="stat-header"><span>Total Students</span><div class="stat-icon"><i class="ri-user-line"></i></div></div>
+            <div class="stat-value">1,240</div>
+            <div class="stat-footer">Enrolled Subscribers</div>
+          </div>
+          <div class="stat-card info">
+            <div class="stat-header"><span>Total Drivers</span><div class="stat-icon"><i class="ri-steering-line"></i></div></div>
+            <div class="stat-value">18</div>
+            <div class="stat-footer">Active Drivers</div>
+          </div>
+          <div class="stat-card primary">
+            <div class="stat-header"><span>Total Buses</span><div class="stat-icon"><i class="ri-bus-line"></i></div></div>
+            <div class="stat-value">20</div>
+            <div class="stat-footer">College Fleet</div>
+          </div>
+          <div class="stat-card success">
+            <div class="stat-header"><span>Today's Active Students</span><div class="stat-icon"><i class="ri-checkbox-circle-line"></i></div></div>
+            <div class="stat-value" id="admin-confirmed-val">893</div>
+            <div class="stat-footer">72% Occupancy Rate</div>
+          </div>
+          <div class="stat-card info">
+            <div class="stat-header"><span>Today's Trips</span><div class="stat-icon"><i class="ri-route-line"></i></div></div>
+            <div class="stat-value">36</div>
+            <div class="stat-footer">Morning & Evening</div>
+          </div>
+          <div class="stat-card warning">
+            <div class="stat-header"><span>Pending Confirmations</span><div class="stat-icon"><i class="ri-time-line"></i></div></div>
+            <div class="stat-value">100</div>
+            <div class="stat-footer">Awaiting Response</div>
+          </div>
+          <div class="stat-card success">
+            <div class="stat-header"><span>Fuel Saved Today</span><div class="stat-icon"><i class="ri-gas-station-line"></i></div></div>
+            <div class="stat-value" id="admin-fuel-val">48.5 L</div>
+            <div class="stat-footer">Cost Saved: <strong id="admin-cost-val">$145.50</strong></div>
+          </div>
+          <div class="stat-card danger">
+            <div class="stat-header"><span>Auto-Skipped Stops</span><div class="stat-icon"><i class="ri-close-circle-line"></i></div></div>
+            <div class="stat-value" id="admin-skipped-stops-val">14 Stops</div>
+            <div class="stat-footer">0 Passenger Removal</div>
+          </div>
+        </div>
+
+        <!-- Quick Action Cards -->
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title"><i class="ri-apps-2-line" style="color:var(--primary);"></i> Admin Quick Actions</h3>
+          </div>
+          <div class="quick-actions-grid">
+            <div class="quick-action-card" onclick="switchView('admin-students')">
+              <div class="quick-action-icon"><i class="ri-user-group-line"></i></div>
+              <span class="quick-action-label">Students</span>
+            </div>
+            <div class="quick-action-card" onclick="switchView('admin-drivers')">
+              <div class="quick-action-icon"><i class="ri-user-shared-line"></i></div>
+              <span class="quick-action-label">Drivers</span>
+            </div>
+            <div class="quick-action-card" onclick="switchView('admin-buses')">
+              <div class="quick-action-icon"><i class="ri-bus-fill"></i></div>
+              <span class="quick-action-label">Buses</span>
+            </div>
+            <div class="quick-action-card" onclick="switchView('admin-routes')">
+              <div class="quick-action-icon"><i class="ri-route-line"></i></div>
+              <span class="quick-action-label">Routes</span>
+            </div>
+            <div class="quick-action-card" onclick="switchView('admin-reports')">
+              <div class="quick-action-icon"><i class="ri-pie-chart-line"></i></div>
+              <span class="quick-action-label">Reports</span>
+            </div>
+            <div class="quick-action-card" onclick="switchView('admin-settings')">
+              <div class="quick-action-icon"><i class="ri-settings-4-line"></i></div>
+              <span class="quick-action-label">Settings</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Admin Student Management -->
+      <section class="view-section" id="admin-students">
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title"><i class="ri-user-group-line" style="color:var(--primary);"></i> Student Management</h3>
+            <button class="btn btn-sm btn-primary" onclick="openModal('modal-add-student')"><i class="ri-user-add-line"></i> Add New Student</button>
+          </div>
+          <div class="toolbar-container">
+            <div class="search-box">
+              <i class="ri-search-line"></i>
+              <input type="text" class="form-control" placeholder="Search student by name, roll no, department...">
+            </div>
+            <div class="filter-actions">
+              <select class="form-control" style="width:auto;">
+                <option>Filter by Bus: All</option>
+                <option>Bus 07</option>
+                <option>Bus 04</option>
+                <option>Bus 12</option>
+              </select>
+            </div>
+          </div>
+          <div class="data-table-container">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Roll No</th>
+                  <th>Name</th>
+                  <th>Department</th>
+                  <th>Year</th>
+                  <th>Assigned Bus</th>
+                  <th>Assigned Stop</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>22CS045</td>
+                  <td><strong>Rahul Sharma</strong></td>
+                  <td>Computer Science</td>
+                  <td>3rd Year</td>
+                  <td>Bus 07</td>
+                  <td>Kukatpally Metro</td>
+                  <td><span class="badge badge-success">Confirmed</span></td>
+                  <td>
+                    <button class="btn btn-sm btn-secondary">Edit</button>
+                    <button class="btn btn-sm btn-danger">Delete</button>
+                  </td>
+                </tr>
+                <tr>
+                  <td>22EC012</td>
+                  <td><strong>Ananya Rao</strong></td>
+                  <td>Electronics</td>
+                  <td>2nd Year</td>
+                  <td>Bus 07</td>
+                  <td>Kukatpally Metro</td>
+                  <td><span class="badge badge-success">Confirmed</span></td>
+                  <td>
+                    <button class="btn btn-sm btn-secondary">Edit</button>
+                    <button class="btn btn-sm btn-danger">Delete</button>
+                  </td>
+                </tr>
+                <tr>
+                  <td>22ME089</td>
+                  <td><strong>Vikram Singh</strong></td>
+                  <td>Mechanical</td>
+                  <td>4th Year</td>
+                  <td>Bus 07</td>
+                  <td>Moosapet</td>
+                  <td><span class="badge badge-danger">Opted Out</span></td>
+                  <td>
+                    <button class="btn btn-sm btn-secondary">Edit</button>
+                    <button class="btn btn-sm btn-danger">Delete</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="pagination-container">
+            <span>Showing 1 to 3 of 1,240 students</span>
+            <div class="pagination-btns">
+              <button class="page-btn active">1</button>
+              <button class="page-btn">2</button>
+              <button class="page-btn">3</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Admin Driver Management -->
+      <section class="view-section" id="admin-drivers">
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title"><i class="ri-user-shared-line" style="color:var(--primary);"></i> Driver Management</h3>
+            <button class="btn btn-sm btn-primary" onclick="openModal('modal-add-driver')"><i class="ri-add-line"></i> Add Driver</button>
+          </div>
+          <div class="data-table-container">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Driver ID</th>
+                  <th>Name</th>
+                  <th>Phone Number</th>
+                  <th>Experience</th>
+                  <th>Assigned Bus</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>DRV-1007</td>
+                  <td><strong>Ramesh Kumar</strong></td>
+                  <td>+91 98765 43210</td>
+                  <td>6 Years</td>
+                  <td>Bus 07</td>
+                  <td><span class="badge badge-success">Active</span></td>
+                  <td><button class="btn btn-sm btn-secondary">Edit</button></td>
+                </tr>
+                <tr>
+                  <td>DRV-1004</td>
+                  <td><strong>Suresh Rao</strong></td>
+                  <td>+91 98765 11223</td>
+                  <td>8 Years</td>
+                  <td>Bus 04</td>
+                  <td><span class="badge badge-success">Active</span></td>
+                  <td><button class="btn btn-sm btn-secondary">Edit</button></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- Admin Bus Management -->
+      <section class="view-section" id="admin-buses">
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title"><i class="ri-bus-line" style="color:var(--primary);"></i> Bus & Fleet Management</h3>
+            <button class="btn btn-sm btn-primary" onclick="openModal('modal-add-bus')"><i class="ri-add-line"></i> Add Bus</button>
+          </div>
+          <div class="data-table-container">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Bus Number</th>
+                  <th>Registration No</th>
+                  <th>Capacity</th>
+                  <th>Assigned Driver</th>
+                  <th>Current Route</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>Bus 07</strong></td>
+                  <td>TS 09 UB 4412</td>
+                  <td>40 Seats</td>
+                  <td>Ramesh Kumar</td>
+                  <td>Kukatpally Expressway</td>
+                  <td><span class="badge badge-success">En Route</span></td>
+                </tr>
+                <tr>
+                  <td><strong>Bus 04</strong></td>
+                  <td>TS 09 UB 1004</td>
+                  <td>40 Seats</td>
+                  <td>Suresh Rao</td>
+                  <td>LB Nagar Express</td>
+                  <td><span class="badge badge-success">En Route</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- Admin Route Management -->
+      <section class="view-section" id="admin-routes">
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title"><i class="ri-route-line" style="color:var(--primary);"></i> Route Builder & Stop Sequence</h3>
+            <button class="btn btn-sm btn-primary"><i class="ri-add-line"></i> Create New Route</button>
+          </div>
+          <p style="color:var(--text-muted); font-size:0.9rem;">Interactive route order and distance calculation.</p>
+        </div>
+      </section>
+
+      <!-- Admin Bus Stop Management -->
+      <section class="view-section" id="admin-stops">
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title"><i class="ri-map-pin-user-line" style="color:var(--primary);"></i> Bus Stop Management</h3>
+          </div>
+          <p style="color:var(--text-muted); font-size:0.9rem;">Manage stop locations and assigned student density.</p>
+        </div>
+      </section>
+
+      <!-- Admin Daily Monitoring -->
+      <section class="view-section" id="admin-monitoring">
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title"><i class="ri-pulse-line" style="color:var(--primary);"></i> Daily Live Telemetry & Monitoring</h3>
+          </div>
+          <div class="map-canvas-container">
+            <svg class="map-svg map-svg-element" viewBox="0 0 1000 340"></svg>
+          </div>
+        </div>
+      </section>
+
+      <!-- Admin Reports -->
+      <section class="view-section" id="admin-reports">
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title"><i class="ri-pie-chart-line" style="color:var(--primary);"></i> Reports & Fuel Analytics</h3>
+            <div style="display:flex; gap:0.5rem;">
+              <button class="btn btn-sm btn-secondary" onclick="exportReport('PDF')"><i class="ri-file-pdf-line"></i> Export PDF</button>
+              <button class="btn btn-sm btn-secondary" onclick="exportReport('Excel')"><i class="ri-file-excel-line"></i> Export Excel</button>
+            </div>
+          </div>
+          
+          <div style="margin-bottom:1.5rem;">
+            <h4 style="font-weight:700; margin-bottom:0.5rem;">Weekly Fuel Saved Trend (Liters)</h4>
+            <div class="chart-container" id="fuel-chart-bars"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Admin Notification Center -->
+      <section class="view-section" id="admin-notifications">
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title"><i class="ri-broadcast-line" style="color:var(--primary);"></i> Notification Broadcast Center</h3>
+          </div>
+          <div class="form-group">
+            <label>Audience</label>
+            <select class="form-control"><option>All Students & Drivers</option></select>
+          </div>
+          <div class="form-group" style="margin-top:1rem;">
+            <label>Message Content</label>
+            <textarea class="form-control" rows="3" placeholder="Compose alert..."></textarea>
+          </div>
+          <button class="btn btn-primary" style="margin-top:1rem;"><i class="ri-send-plane-line"></i> Send Push Broadcast</button>
+        </div>
+      </section>
+
+      <!-- Admin Settings -->
+      <section class="view-section" id="admin-settings">
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title"><i class="ri-settings-4-line" style="color:var(--primary);"></i> System Parameters</h3>
+          </div>
+          <div class="grid-2">
+            <div class="form-group">
+              <label>Daily Confirmation Deadline Cutoff</label>
+              <input type="time" class="form-control" value="07:00">
+            </div>
+            <div class="form-group">
+              <label>Notification Reminder Schedule</label>
+              <input type="time" class="form-control" value="06:30">
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- MODALS -->
+
+  <!-- Modal: Add Student -->
+  <div class="modal-overlay" id="modal-add-student">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 class="modal-title">Add New Student</h3>
+        <button class="modal-close" onclick="closeModal('modal-add-student')">&times;</button>
+      </div>
+      <form onsubmit="handleAddStudent(event)">
+        <div class="form-group"><label>Full Name</label><input type="text" class="form-control" required placeholder="e.g. Rahul Sharma"></div>
+        <div class="form-group" style="margin-top:0.75rem;"><label>Roll Number</label><input type="text" class="form-control" required placeholder="e.g. 22CS045"></div>
+        <div class="form-group" style="margin-top:0.75rem;"><label>Department</label><input type="text" class="form-control" required placeholder="Computer Science"></div>
+        <div class="form-group" style="margin-top:0.75rem;"><label>Assign Bus</label><select class="form-control"><option>Bus 07</option><option>Bus 04</option></select></div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="closeModal('modal-add-student')">Cancel</button>
+          <button type="submit" class="btn btn-primary">Save Student</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal: Add Driver -->
+  <div class="modal-overlay" id="modal-add-driver">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 class="modal-title">Add Driver Record</h3>
+        <button class="modal-close" onclick="closeModal('modal-add-driver')">&times;</button>
+      </div>
+      <form onsubmit="handleAddDriver(event)">
+        <div class="form-group"><label>Driver Full Name</label><input type="text" class="form-control" required></div>
+        <div class="form-group" style="margin-top:0.75rem;"><label>Phone Number</label><input type="text" class="form-control" required></div>
+        <div class="form-group" style="margin-top:0.75rem;"><label>Assign Bus</label><select class="form-control"><option>Bus 07</option></select></div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="closeModal('modal-add-driver')">Cancel</button>
+          <button type="submit" class="btn btn-primary">Save Driver</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal: Add Bus -->
+  <div class="modal-overlay" id="modal-add-bus">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 class="modal-title">Add Bus to Fleet</h3>
+        <button class="modal-close" onclick="closeModal('modal-add-bus')">&times;</button>
+      </div>
+      <form onsubmit="handleAddBus(event)">
+        <div class="form-group"><label>Bus Number</label><input type="text" class="form-control" placeholder="Bus 21" required></div>
+        <div class="form-group" style="margin-top:0.75rem;"><label>Registration Number</label><input type="text" class="form-control" placeholder="TS 09 UB 9999" required></div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="closeModal('modal-add-bus')">Cancel</button>
+          <button type="submit" class="btn btn-primary">Add Bus</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal: Driver Report Issue -->
+  <div class="modal-overlay" id="modal-report-issue">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 class="modal-title" style="color:var(--danger);"><i class="ri-error-warning-line"></i> Report Transport Issue</h3>
+        <button class="modal-close" onclick="closeModal('modal-report-issue')">&times;</button>
+      </div>
+      <form onsubmit="handleReportIssue(event)">
+        <div class="form-group">
+          <label>Issue Category</label>
+          <select class="form-control">
+            <option>Vehicle Technical Problem</option>
+            <option>Traffic Jam / Road Block</option>
+            <option>Student Issue</option>
+            <option>Other</option>
+          </select>
+        </div>
+        <div class="form-group" style="margin-top:0.75rem;">
+          <label>Issue Description</label>
+          <textarea class="form-control" rows="3" placeholder="Describe delay or vehicle issue..." required></textarea>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="closeModal('modal-report-issue')">Cancel</button>
+          <button type="submit" class="btn btn-danger">Dispatch Report</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Floating Edge-Case Simulator Bar -->
+  <div class="simulator-bar">
+    <div style="font-weight:700; display:flex; align-items:center; gap:0.4rem; color:#fbbf24;">
+      <i class="ri-flask-line"></i> Edge Case Simulator:
+    </div>
+    <button class="sim-btn" onclick="triggerEdgeCase('toggle-deadline')">Toggle Deadline</button>
+    <button class="sim-btn" onclick="triggerEdgeCase('all-opt-out')">Simulate 0 Passengers (Auto-Skip)</button>
+    <button class="sim-btn" onclick="triggerEdgeCase('bus-delay')">Simulate Traffic Delay</button>
+    <button class="sim-btn" onclick="triggerEdgeCase('college-holiday')">Toggle Holiday</button>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
